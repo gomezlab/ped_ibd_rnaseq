@@ -16,8 +16,6 @@ dim(cts)
 coldata$sample = rownames(coldata)
 sample = rownames(coldata)
 
-head(coldata)
-
 
 # %%
 #set columns as factor
@@ -115,12 +113,6 @@ dev.off()
 png('results/c/B2/RUV_pca_plot_1.png')
 plotPCA(set, col=as.numeric(as.factor(coldata$B2)), k=2, cex=1.2)
 dev.off()
-
-# %%
-head(ruv_data)
-
-# %%
-write.csv(ruv_data, file = "results/c/ruv_data_cd.csv")
 
 # %%
 ruv_data$batch = as.factor(ruv_data$batch)
@@ -275,9 +267,9 @@ write.csv(deg_counts, file = "results/c/deg_counts.csv", row.names = FALSE)
 
 # %%
 # Read in data
-cts = as.matrix(read.csv("../data/processed_data/data_i_raw.csv", sep=',', row.names='gene'))
+cts = as.matrix(read.csv("../../data/processed_data/data_i_raw.csv", sep=',', row.names='gene'))
 
-coldata = read.csv('../data/metadata/coldata_cd_i.csv', sep=',', row.names='sample')
+coldata = read.csv('../../data/metadata/coldata_cd_i.csv', sep=',', row.names='sample')
 dim(coldata)
 dim(cts)
 #get coldata row names

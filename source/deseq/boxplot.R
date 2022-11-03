@@ -7,14 +7,13 @@ library(RUVSeq)
 
 # This is useful for when you want to run in a different directory
 # Should be updated based on where you are running this
-source("/home/kchen/Documents/ped_ibd/data/raw/downstreamAnalysis_RNAseqFunctions.R")
-setwd("/home/kchen/Documents/ped_ibd/deseq2")
+source("downstreamAnalysis_RNAseqFunctions.R")
 
 # %%
 # Read in data
-cts = as.matrix(read.csv("../data/data_c_all_raw.csv", sep=',', row.names='gene'))
+cts = as.matrix(read.csv("../../data/processed_data/data_c_all_raw.csv", sep=',', row.names='gene'))
 
-coldata = read.csv('../data/coldata_all_c.csv', sep=',', row.names='sample')
+coldata = read.csv('../../data/metadata/coldata_all_c.csv', sep=',', row.names='sample')
 dim(coldata)
 dim(cts)
 #get coldata row names
@@ -23,7 +22,7 @@ sample = rownames(coldata)
 #set columns as factor
 status = as.factor(coldata$status)
 batch = coldata$batch
-sexBin = as.numeric(as.factor(coldata$Sex))
+sexBin = as.numeric(as.factor(coldata$sex))
 age = coldata$DiagnosisAge
 status = as.factor(coldata$status)
 
@@ -33,7 +32,7 @@ cts <- round(cts);
 #check if row names of coldata match colnames of cts
 all(rownames(coldata) == colnames(cts))
 #adjust for batch and sexBin
-design <- as.formula(~ batch + Sex)
+design <- as.formula(~ batch + sex)
 #create the dds object
 dds = DESeqDataSetFromMatrix(countData = cts, colData = coldata, design = design)
 vsd = vst(dds)
@@ -46,12 +45,12 @@ assay(vsd) <- removeBatchEffect(assay(vsd), batch=batch, covariates=cbind(sexBin
 nc <- as.data.frame(assay(vsd))
 nc$avg_exp <- rowSums(nc,na.rm=TRUE) / ncol(nc) # x should be your normalized matrix
 nc <- arrange(nc, -avg_exp)%>%dplyr::select(-avg_exp)
-nc <- nc[1:1000,]
+nc <- nc[1:5000,]
 
 # Calculate the variance of each genes, and choose the lowest 1000 genes as the negative control gene
 nc$row_stv <- rowSds(as.matrix(nc))/(rowSums(nc,na.rm=TRUE) / ncol(nc))
 nc <- arrange(nc, row_stv) %>% dplyr::select(-row_stv)
-nc <- nc[1:250,]
+nc <- nc[1:1000,]
 ##The newSeqExpressionSet is given the raw count matrix, phenotypic data, and then the names of the samples 
 # Create a new Expression Set and perform an upper quartile normalization
 nc <- round(nc*1000)
@@ -78,7 +77,7 @@ dds$status <- factor(dds$status, levels = c("nonIBD","CD"))
 dds$status <- relevel(dds$status, ref='nonIBD')
 levels(dds$status)
 # Set up new DESeq object to perform differential analyses
-dds1 <- DESeqDataSetFromMatrix(countData=cts,colData=ruv_data,design = ~batch + Sex + W_1 + status)
+dds1 <- DESeqDataSetFromMatrix(countData=cts,colData=ruv_data,design = ~batch + sex + W_1 + status)
 
 # remove genes with low counts for most samples
 y <- DGEList(counts=counts(dds), group=coldata$status)
@@ -211,9 +210,9 @@ dev.off()
 
 # %%
 # Read in data
-cts = as.matrix(read.csv("../data/data_c_raw.csv", sep=',', row.names='gene'))
+cts = as.matrix(read.csv("../../data/processed_data/data_c_raw.csv", sep=',', row.names='gene'))
 
-coldata = read.csv('../data/clin_c.csv', sep=',', row.names='sample')
+coldata = read.csv('../data/metadata/coldata_cd_c.csv', sep=',', row.names='sample')
 
 dim(coldata)
 dim(cts)
@@ -687,9 +686,9 @@ dev.off()
 
 # %%
 # Read in data
-cts = as.matrix(read.csv("../data/data_i_all_raw.csv", sep=',', row.names='gene'))
+cts = as.matrix(read.csv("../../data/processed_data/data_i_all_raw.csv", sep=',', row.names='gene'))
 
-coldata = read.csv('../data/coldata_all_i.csv', sep=',', row.names='sample')
+coldata = read.csv('../../data/metadata/coldata_all_i.csv', sep=',', row.names='sample')
 dim(coldata)
 dim(cts)
 #get coldata row names
@@ -698,7 +697,7 @@ sample = rownames(coldata)
 #set columns as factor
 status = as.factor(coldata$status)
 batch = coldata$batch
-sexBin = as.numeric(as.factor(coldata$Sex))
+sexBin = as.numeric(as.factor(coldata$sex))
 age = coldata$DiagnosisAge
 status = as.factor(coldata$status)
 
@@ -708,7 +707,7 @@ cts <- round(cts);
 #check if row names of coldata match colnames of cts
 all(rownames(coldata) == colnames(cts))
 #adjust for batch and sexBin
-design <- as.formula(~ batch + Sex)
+design <- as.formula(~ batch + sex)
 #create the dds object
 dds = DESeqDataSetFromMatrix(countData = cts, colData = coldata, design = design)
 vsd = vst(dds)
@@ -753,7 +752,7 @@ dds$status <- factor(dds$status, levels = c("nonIBD","CD"))
 dds$status <- relevel(dds$status, ref='nonIBD')
 levels(dds$status)
 # Set up new DESeq object to perform differential analyses
-dds1 <- DESeqDataSetFromMatrix(countData=cts,colData=ruv_data,design = ~batch + Sex + W_1 + status)
+dds1 <- DESeqDataSetFromMatrix(countData=cts,colData=ruv_data,design = ~batch + sex + W_1 + status)
 
 # remove genes with low counts for most samples
 y <- DGEList(counts=counts(dds), group=coldata$status)
@@ -878,9 +877,9 @@ dev.off()
 # %%
 
 # Read in data
-cts = as.matrix(read.csv("../data/data_i_raw.csv", sep=',', row.names='gene'))
+cts = as.matrix(read.csv("../../data/processed_data/data_i_raw.csv", sep=',', row.names='gene'))
 
-coldata = read.csv('../data/clin_i.csv', sep=',', row.names='sample')
+coldata = read.csv('../../data/metadata/coldata_cd_i.csv', sep=',', row.names='sample')
 
 dim(coldata)
 dim(cts)

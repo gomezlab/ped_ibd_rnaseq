@@ -5,18 +5,21 @@ library("org.Hs.eg.db")
 library(RUVSeq)
 library('openxlsx')
 source("downstreamAnalysis_RNAseqFunctions.R")
+# %%
 
 # %%
 # Read in data
 cts = as.matrix(read.csv("../../data/processed_data/data_c_all_raw.csv", sep=',', row.names='gene'))
 coldata = read.csv('../../data/metadata/coldata_all_c.csv', sep=',', row.names='sample')
 
-#remove sample PNIBD26_C from cts and coldata
+#remove sample PNIBD26_C from cts and coldata (eventually dx'd with indeterminate IBD years after study biopsy)
 cts = cts[,-which(colnames(cts) == 'PNIBD26_C')]
 coldata = coldata[-which(rownames(coldata) == 'PNIBD26_C'),]
 dim(coldata)
 dim(cts)
+# %%
 
+# %%
 #create a new column for the sample name
 coldata$sample = rownames(coldata)
 sample = rownames(coldata)
@@ -46,7 +49,7 @@ dds = DESeqDataSetFromMatrix(countData = cts, colData = coldata, design = design
 #variance stabilizing transform
 vsd = vst(dds)
 mat= assay(vsd)
-
+# %%
 
 # %%
 #PCA of raw data
@@ -124,18 +127,18 @@ dev.off()
 # %%
 #save the coldata + RUV factor
 ruv_data<-pData(set_ruv)
-write.xlsx(ruv_data, file="results/c/cd/ruv_data_1.xlsx")
+# write.xlsx(ruv_data, file="results/c/cd/ruv_data_1.xlsx")
 
 # %%
 #redo data-prep steps with the ruv_data dataframe
 #set columns as factor
 ruv_data$status = as.factor(ruv_data$status)
 ruv_data$batch = as.factor(ruv_data$batch)
-ruv_data$sex = as.factor(ruv_data$Sex)
+ruv_data$sex = as.factor(ruv_data$sex)
 
 status = ruv_data$status
 batch = ruv_data$batch
-sexBin = ruv_data$Sex
+sexBin = ruv_data$sex
 
 tin = ruv_data$TIN
 
@@ -143,7 +146,7 @@ w_1 = ruv_data$W_1
 
 # %%
 # Set up new DESeq object to perform differential analyses
-dds1 <- DESeqDataSetFromMatrix(countData=cts, colData=ruv_data, design = ~batch + Sex + TIN + W_1 + status)
+dds1 <- DESeqDataSetFromMatrix(countData=cts, colData=ruv_data, design = ~batch + sex + TIN + W_1 + status)
 
 # %%
 vsd = vst(dds)
@@ -168,7 +171,7 @@ dev.off()
 
 # %%
 #now the DESeq analysis
-dds1 <- DESeqDataSetFromMatrix(countData=cts,colData=ruv_data,design = ~batch + Sex + TIN + W_1 + status)
+dds1 <- DESeqDataSetFromMatrix(countData=cts,colData=ruv_data,design = ~batch + sex + TIN + W_1 + status)
 #filter out lowly expressed genes
 y <- DGEList(counts=counts(dds1), group=coldata$status)
 keep <- filterByExpr(y)
@@ -205,8 +208,8 @@ write.xlsx(deg_counts, file = "results/c/cd/deg_counts.xlsx", sheetName='DEGs', 
 # %%
 #same thing for the ileum data
 # Read in data
-cts = as.matrix(read.csv("../data/processed_data/data_i_all_raw.csv", sep=',', row.names='gene'))
-coldata = read.csv('../data/metadata/coldata_all_i.csv', sep=',', row.names='sample')
+cts = as.matrix(read.csv("../../data/processed_data/data_i_all_raw.csv", sep=',', row.names='gene'))
+coldata = read.csv('../../data/metadata/coldata_all_i.csv', sep=',', row.names='sample')
 dim(coldata)
 dim(cts)
 coldata$sample = rownames(coldata)
@@ -294,7 +297,7 @@ png("results/i/cd/RUV_pca_1.png")
 plotPCA(set, col=as.numeric(as.factor(coldata$status)), k=2, cex=1.2)
 dev.off()
 ruv_data<-pData(set_ruv)
-write.csv(ruv_data, file="results/i/cd/ruv_data_1.csv")
+# write.csv(ruv_data, file="results/i/cd/ruv_data_1.csv")
 
 #set columns as factor
 ruv_data$status = as.factor(ruv_data$status)
@@ -362,3 +365,4 @@ sum(resOrdered$padj < 0.05)
 deg_counts[nrow(deg_counts)+1,] <- c('ileum', sum(resOrdered$padj < 0.05))
 
 write.xlsx(deg_counts, file = "results/i/cd/deg_counts.xlsx", sheetName='DEGs', row.names = TRUE, col.names = TRUE)
+# %%

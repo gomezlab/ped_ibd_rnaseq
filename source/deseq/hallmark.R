@@ -113,6 +113,7 @@ library(fgsea)
 ranks <- deframe(res2)
 head(ranks, 15)
 
+# %%
 pathways.hallmark <- gmtPathways("/home/kchen/Documents/ped_ibd/deseq/gsea/h.all.v7.5.1.symbols.gmt")
 pathways.hallmark %>%
     head() %>%
@@ -126,7 +127,7 @@ head(fgseaResTidy)
 #change leadingEdge data type to string
 fgseaResTidy$leadingEdge <- as.character(fgseaResTidy$leadingEdge)
 #save to csv
-write.csv(fgseaResTidy, 'results/c/B2/fgsea_hallmark_limma3.csv')
+write.csv(fgseaResTidy, 'results/c/B2/fgsea_hallmark.csv')
 
 top10 = fgseaResTidy %>%
     arrange(NES) %>%
@@ -139,7 +140,7 @@ top10$pathway <- gsub('HALLMARK ', '', top10$pathway)
 top10$pathway <- tolower(top10$pathway)
 
 head(top10)
-png('results/c/B2/fgsea_hallmark_limma3.png', width=1440, height=1440)
+png('results/c/B2/fgsea_hallmark.png', width=1440, height=1440)
 ggplot(top10, aes(reorder(pathway, NES), NES)) +
   #fill color based on padj < 0.05, where padj < 0.05 is blue, otherwise red
   geom_col(aes(fill=padj < 0.05)) +
@@ -150,6 +151,6 @@ ggplot(top10, aes(reorder(pathway, NES), NES)) +
   #increase font size
   theme_minimal(base_size=45)
 dev.off()
-
+# %%
 
 

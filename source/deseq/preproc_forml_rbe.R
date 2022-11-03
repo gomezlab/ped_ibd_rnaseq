@@ -3,15 +3,12 @@
 library("AnnotationDbi")
 library("org.Hs.eg.db")
 library(RUVSeq)
+source("downstreamAnalysis_RNAseqFunctions.R")
 
-# This is useful for when you want to run in a different directory
-# Should be updated based on where you are running this
-source("/home/kchen/Documents/ped_ibd/data/raw/downstreamAnalysis_RNAseqFunctions.R")
-setwd("/home/kchen/Documents/ped_ibd/deseq2")
 # Read in data
-cts = as.matrix(read.csv("../data/data_c_raw.csv", sep=',', row.names='gene'))
+cts = as.matrix(read.csv("../../data/processed_data/data_c_raw.csv", sep=',', row.names='gene'))
 
-coldata = read.csv('../data/clin_c.csv', sep=',', row.names='sample')
+coldata = read.csv('../../data/metadata/coldata_cd_c.csv', sep=',', row.names='sample')
 dim(coldata)
 dim(cts)
 #get coldata row names
