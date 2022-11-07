@@ -22,7 +22,7 @@ from sklearn.feature_selection import SelectFromModel
 #%%
 for outcome in ['B2', 'B3', 'rem', 'surg']:
     #%%
-    data = pd.read_csv('../data/clin_c.csv', index_col=0)
+    data = pd.read_csv('../../data/coldata_all_c.csv', index_col=0)
     rf_params = pd.read_csv('scores_rf_{}.csv'.format(outcome), index_col=0)
 
     rf_params.head()
@@ -61,7 +61,7 @@ for outcome in ['B2', 'B3', 'rem', 'surg']:
                 del rf
 
 
-    data = pd.read_csv('../data/clin_c.csv', index_col=0)
+    data = pd.read_csv('../../data/coldata_all_c.csv', index_col=0)
 
     xgb_params = pd.read_csv('scores_xgb_{}.csv'.format(outcome), index_col=0)
     xgb_params.reset_index(inplace=True, drop=True)
@@ -92,7 +92,7 @@ for outcome in ['B2', 'B3', 'rem', 'surg']:
                 del xgb
 
 
-    data = pd.read_csv('../data/clin_c.csv', index_col=0)
+    data = pd.read_csv('../../data/coldata_all_c.csv', index_col=0)
     nn_params = pd.read_csv('scores_nn_{}.csv'.format(outcome), index_col=0)
     nn_params.reset_index(inplace=True, drop=True)
     

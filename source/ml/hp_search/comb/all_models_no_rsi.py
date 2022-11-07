@@ -22,7 +22,7 @@ from sklearn.feature_selection import SelectFromModel
 #%%
 for outcome in ['B2', 'B3', 'rem', 'surg']:
     #%%
-    data = pd.read_csv('../data/comb1_c.csv', index_col=0)
+    data = pd.read_csv('../../data/comb_vst_c.csv', index_col=0)
     rf_params = pd.read_csv('hp_results/no_rsi/rf_{}.csv'.format(outcome), index_col=0)
 
     rf_params.head()
@@ -76,7 +76,7 @@ for outcome in ['B2', 'B3', 'rem', 'surg']:
                         del rf
 
 
-    data = pd.read_csv('../data/comb1_c.csv', index_col=0)
+    data = pd.read_csv('../../data/comb_vst_c.csv', index_col=0)
 
     xgb_params = pd.read_csv('hp_results/no_rsi/xgb_{}.csv'.format(outcome), index_col=0)
     xgb_params.reset_index(inplace=True, drop=True)
@@ -124,7 +124,7 @@ for outcome in ['B2', 'B3', 'rem', 'surg']:
                     del xgb
 
 
-    data = pd.read_csv('../data/comb1_c.csv', index_col=0)
+    data = pd.read_csv('../../data/comb_vst_c.csv', index_col=0)
     nn_params = pd.read_csv('hp_results/no_rsi/nn_{}.csv'.format(outcome), index_col=0)
     nn_params.reset_index(inplace=True, drop=True)
     nn_feat_count = nn_params['feature_count'][0]

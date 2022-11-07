@@ -19,7 +19,7 @@ from tensorflow import keras
 from sklearn.feature_selection import SelectFromModel
 
 
-data = pd.read_csv('../data/clin_c.csv', index_col=0)
+data = pd.read_csv('../../data/coldata_cd_c.csv', index_col=0)
 
 X = data.drop(['B2', 'B3', 'surg', 'rem', 'batch', 'mir'], axis=1)
 y = data['B3']

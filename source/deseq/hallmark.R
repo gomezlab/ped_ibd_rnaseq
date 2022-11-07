@@ -3,6 +3,7 @@ library(EnhancedVolcano)
 library(fgsea)
 library(tidyverse)
 library(dplyr)
+# %%
 
 # %%
 res <- read.csv('results/i/cd/results_deseq.csv')

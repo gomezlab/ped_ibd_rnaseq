@@ -29,7 +29,7 @@ from tensorflow import keras
 from sklearn.feature_selection import SelectFromModel
 
 
-data = pd.read_csv('../data/comb1_c.csv', index_col=0)
+data = pd.read_csv('../../data/comb_vst_c.csv', index_col=0)
 
 clin_cols = ['sex', 'dx_age', 'initial_b', 'location', 'perianal_disease']
 
